@@ -1,0 +1,693 @@
+function rog_prompt
+{
+    local COLOR_WHITE="\[\033[1;37m\]"
+    local NO_COLOR="\[\033[0m\]"
+
+    # export PS1="\T \u@\h[\!]:\w$NO_COLOR\n> "
+    export PS1="$COLOR_WHITE\T \u@\h[\!]:\w$NO_COLOR\n> "
+    # export PS1="$NO_COLOR\T \u@\h[\!]:\w$NO_COLOR\n> "
+}
+
+# Regular
+txtblk='\e[0;30m' # Black
+txtred='\e[0;31m' # Red
+txtgrn='\e[0;32m' # Green
+txtylw='\e[0;33m' # Yellow
+txtblu='\e[0;34m' # Blue
+txtpur='\e[0;35m' # Purple
+txtcyn='\e[0;36m' # Cyan
+txtwht='\e[0;37m' # White
+
+# Bold
+bldblk='\e[1;30m' # Black
+bldred='\e[1;31m' # Red
+bldgrn='\e[1;32m' # Green
+bldylw='\e[1;33m' # Yellow
+bldblu='\e[1;34m' # Blue
+bldpur='\e[1;35m' # Purple
+bldcyn='\e[1;36m' # Cyan
+bldwht='\e[1;37m' # White
+bldgry='\e[0;37m' # Gray
+
+# Underline
+unkblk='\e[4;30m' # Black
+undred='\e[4;31m' # Red
+undgrn='\e[4;32m' # Green
+undylw='\e[4;33m' # Yellow
+undblu='\e[4;34m' # Blue
+undpur='\e[4;35m' # Purple
+undcyn='\e[4;36m' # Cyan
+undwht='\e[4;37m' # White
+
+# Background
+bakblk='\e[40m'   # Black
+bakred='\e[41m'   # Red
+bakgrn='\e[42m'   # Green
+bakylw='\e[43m'   # Yellow
+bakblu='\e[44m'   # Blue
+bakpur='\e[45m'   # Purple
+bakcyn='\e[46m'   # Cyan
+bakwht='\e[47m'   # White
+txtrst='\e[0m'    # Text Reset
+
+find_git_branch() {
+    local branch
+    # Based on: http://stackoverflow.com/a/13003854/170413
+    if branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+    then
+        if [[ "$branch" == "HEAD" ]]; then
+            branch='(detached head)'
+        fi
+        GIT_BRANCH=$branch
+        git_branch="($branch)"
+    else
+        GIT_BRANCH=""
+        git_branch=""
+    fi
+}
+
+find_git_dirty() {
+    if [[ -z "$git_branch" ]]
+    then
+        git_dirty=''
+    else
+        # Based on: http://stackoverflow.com/a/2659808/170413
+        local err
+        if err=$(git diff-files --quiet 2>&1)
+        then
+            if git diff-index --quiet --cached HEAD
+            then
+                git_dirty=''
+            else
+                # Can't figure out different colors
+                git_dirty="^"
+            fi
+        elif [ -n "$err" ]
+        then
+            # Some error - most likely that it was run within $GIT_DIR
+            # Resolve repo root instead? `git rev-parse --git-dir` does not work, nor does the 'git root' alias trick
+            git_dirty=""
+        else
+            git_dirty="*"
+        fi
+    fi
+}
+
+PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
+
+# Default Git enabled prompt with dirty state
+#export PS1="$txtwht\u@\h:\w\[$txtcyn\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
+
+# Another variant:
+export PS1="\[$bldgrn\]\u@\h\[$bldwht\] \w\[$bldcyn\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
+
+# Default Git enabled root prompt (for use with "sudo -s")
+export SUDO_PS1="$txtwht\[$bakred\]\u@\h\[$txtrst\] \w\$ "
+
+export MY_PATH=/usr/bin/:/usr/local/bin:/bin:/usr/sbin:/sbin:~/root/bin:/Applications/Xcode.app/Contents/Developer/usr/libexec/git-core:/Applications/Xcode.app/Contents/Developer/usr/bin/:/usr/X11R6/bin/
+export PATH=$MY_PATH
+
+#export XXDIFF=/usr/local/bin/xxdiff.app/Contents/MacOS/xxdiff
+export XXDIFF=/Applications/xxdiff.app/Contents/MacOS/xxdiff
+
+alias ll='ls -l'
+alias rebash='source ~/.bash_profile'
+#alias e='/Applications/Aquamacs\ Emacs.app/Contents/MacOS/Aquamacs\ Emacs'
+#alias e='/Applications/Emacs.app/Contents/MacOS/Emacs --debug-init'
+#alias e='/Applications/Emacs.app/Contents/MacOS/Emacs'
+alias h='history'
+alias hgrep='history | grep'
+alias glog='tail -f /nestlabs/var/log/nlclient | grep $@'
+alias cpush='cp -v /nestlabs/etc/client.config ~/Desktop/Configs'
+alias cpull='cp -v ~/Desktop/Configs/client.config /nestlabs/etc'
+
+function e()
+{
+    #    /Applications/Aquamacs.app/Contents/MacOS/Aquamacs &
+	/Applications/Emacs.app/Contents/MacOS/Emacs &
+}
+
+function emacsfordiff()
+{
+    /Applications/Emacs.app/Contents/MacOS/Emacs
+}
+
+function enw()
+{
+    #    /Applications/Aquamacs.app/Contents/MacOS/Aquamacs &
+	/Applications/Emacs.app/Contents/MacOS/Emacs -nw
+}
+
+function tlog()
+{
+    tail -F /nestlabs/var/log/nlclient
+}
+
+function b-etag()
+{
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "b-etag: no BuildRoot defined"
+	    return -1
+    fi
+
+    echo "*** cd to BuildRoot $BuildRoot"
+
+    cd $BuildRoot
+
+    TAGS_FILE=TAGS
+
+    rm -f $TAGS_FILE
+    touch $TAGS_FILE
+
+    TAG_DIRS="\
+  sw/nestlabs/app \
+  sw/nestlabs/include \
+  sw/nestlabs/lib \
+  sw/nestlabs/osm \
+  sw/nestlabs/scpm \
+  sw/nestlabs/zigbee \
+  sw/nestlabs/test/tests \
+  /nestlabs/etc \
+  /nestlabs/var/log \
+  "
+
+    for i in $TAG_DIRS;
+    do
+	    echo "*** Tagging directory $i"
+	    find $i -name "*.c" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.cpp" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.h" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.hpp" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.xml" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.mm" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.m" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.mak" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.bld" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.el" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.xsd" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.strings" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "*.config" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "*.py" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "messages*" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "nlclient*" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "nlevent*" | xargs etags --output=$TAGS_FILE --append
+    done
+
+    echo "*** Tagging complete - file is $BuildRoot/$TAGS_FILE"
+}
+
+function b-ctag()
+{
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "b-ctag: no BuildRoot defined"
+	    return -1
+    fi
+
+    echo "*** cd to BuildRoot $BuildRoot"
+
+    cd $BuildRoot
+
+    TAGS_FILE=TAGS
+
+    rm -f $TAGS_FILE
+    touch $TAGS_FILE
+
+    TAG_DIRS="\
+  sw/nestlabs/app \
+  sw/nestlabs/include \
+  sw/nestlabs/lib \
+  sw/nestlabs/osm \
+	sw/nestlabs/scpm \
+	sw/nestlabs/zigbee \
+	"
+
+    for i in $TAG_DIRS;
+    do
+	    echo "*** Tagging directory $i"
+	    find $i -name "*.c" | xargs ctags -a -f $TAGS_FILE
+	    find $i -name "*.cpp" | xargs ctags -a -f $TAGS_FILE
+	    find $i -name "*.h" | xargs ctags -a -f $TAGS_FILE
+	    find $i -name "*.hpp" | xargs ctags -a -f $TAGS_FILE
+	    find $i -name "*.mak" | xargs ctags -a -f $TAGS_FILE
+	    find $i -name "*.strings" | xargs ctags -a -f $TAGS_FILE
+    done
+
+    echo "*** Tagging complete - file is $BuildRoot/$TAGS_FILE"
+}
+
+function b-gtag()
+{
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "b-gtag: no BuildRoot defined"
+	    return -1
+    fi
+
+    echo "*** cd to BuildRoot $BuildRoot"
+
+    cd $BuildRoot
+
+    TAGS_FILE=TAGS
+
+    rm -f $TAGS_FILE
+    touch $TAGS_FILE
+
+    TAG_DIRS="\
+  sw/nestlabs/app \
+	sw/nestlabs/include \
+	sw/nestlabs/lib \
+	sw/nestlabs/osm \
+	sw/nestlabs/scpm \
+	sw/nestlabs/zigbee \
+	"
+
+    for i in $TAG_DIRS;
+    do
+	    echo "*** Tagging directory $i"
+	    find $i -name "*.c" | xargs ctags -a -f $TAGS_FILE
+	    find $i -name "*.cpp" | xargs ctags -a -f $TAGS_FILE
+	    find $i -name "*.h" | xargs ctags -a -f $TAGS_FILE
+	    find $i -name "*.hpp" | xargs ctags -a -f $TAGS_FILE
+	    find $i -name "*.mak" | xargs ctags -a -f $TAGS_FILE
+	    find $i -name "*.strings" | xargs ctags -a -f $TAGS_FILE
+    done
+
+    echo "*** Tagging complete - file is $BuildRoot/$TAGS_FILE"
+}
+
+function b-find()
+{
+    if [ "$1" == "" ];
+    then
+	    echo "usage: b-find <search string>"
+	    return -1
+    fi
+
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "b-find: No valid BuildRoot"
+	    return -1
+    fi
+
+    echo "*"
+    echo "* Doing a find at $BuildRoot"
+    echo "*"
+    cd $BuildRoot
+    find $BuildRoot -name "$1"
+}
+
+function d1-goto()
+{
+    #export GIT_EXTERNAL_DIFF="~/root/bin/b-gitdiff"
+    unset GIT_EXTERNAL_DIFF
+	export GIT_EDITOR="/Applications/Emacs.app/Contents/MacOS/Emacs"
+
+    cd ~/dev/dolomite/production/
+    source build/scripts/environment/setup.bash
+}
+
+function d1-reset()
+{
+	if [ "$BuildRoot" == "" ];
+	then
+		echo "d1-reset: no BuildRoot defined"
+		return -1
+	fi
+
+	cd $BuildRoot/../../
+
+	echo "d1-reset: blowing away $BuildRoot/../../dolomite"
+	rm -rf dolomite
+
+	echo "d1-reset: cloning from Ubuntu"
+	git clone /mnt/hgfs/NestDev/dolomite
+	echo "d1-reset: cloning complete"
+
+	d1-goto
+}
+
+function d1-show-changed-files()
+{
+    git diff-tree --no-commit-id --name-only -r $@
+}
+
+function w1-goto()
+{
+    #export GIT_EXTERNAL_DIFF="~/root/bin/b-gitdiff"
+    unset GIT_EXTERNAL_DIFF
+	export GIT_EDITOR="/Applications/Emacs.app/Contents/MacOS/Emacs"
+    export BuildRoot="/Users/rtinkoff/dev/weave/"
+    cd $BuildRoot
+
+    echo "BuildRoot=$BuildRoot"
+}
+
+function w1-rebuild()
+{
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "w1-rebuild: no BuildRoot defined"
+	    return -1
+    fi
+
+    cd $BuildRoot && make -f StandAlone.mk clean && make -f StandAlone.mk
+}
+
+function w1-etag()
+{
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "w1-etag: no BuildRoot defined"
+	    return -1
+    fi
+
+    echo "*** cd to BuildRoot $BuildRoot"
+
+    cd $BuildRoot
+
+    TAGS_FILE=TAGS
+
+    rm -f $TAGS_FILE
+    touch $TAGS_FILE
+
+    TAG_DIRS="\
+      . \
+      /Users/rtinkoff/Desktop/notes \
+      "
+
+    for i in $TAG_DIRS;
+    do
+	    echo "*** Tagging directory $i"
+	    find $i -name "*.c" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.cpp" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.h" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.hpp" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.xml" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.mm" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.m" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.mak" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.bld" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.el" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.xsd" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.strings" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "*.config" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "*.py" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "messages*" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "nlclient*" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "nlevent*" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "*.txt" | xargs etags --output=$TAGS_FILE --append
+    done
+
+    TAG_FILES="\
+      /Users/rtinkoff/.emacs \
+      /Users/rtinkoff/.bashrc \
+      "
+
+    for i in $TAG_FILES;
+    do
+	    echo "*** Tagging file $i"
+	    etags --output=$TAGS_FILE --append $i
+    done
+
+    echo "*** Tagging complete - file is $BuildRoot/$TAGS_FILE"
+}
+
+function bdxbuild()
+{
+	cd /Volumes/NestDev/weave/core/; make BuildConfig=development BuildProduct=simulator clean; make BuildConfig=development BuildProduct=simulator
+	cd /Volumes/NestDev/weave/inet/; make BuildConfig=development BuildProduct=simulator clean; make BuildConfig=development BuildProduct=simulator
+	cd /Volumes/NestDev/weave/test-apps; make -f StandAlone.mk clean; make -f StandAlone.mk
+}
+
+function bdxrun()
+{
+	cd /Volumes/NestDev/weave/test-apps
+    #	./weave-bdx --dest-addr 10.2.11.128 2 --fabric-id 1
+    #    ./weave-bdx --dest-addr 172.30.1.55 2 --fabric-id 1
+    ./weave-bdx --dest-addr 107.22.101.185 2 --fabric-id 1
+}
+
+function d1-master()
+{
+    d1-goto
+    git checkout master
+}
+
+function d1-wsm()
+{
+    d1-goto
+    git checkout user/rtinkoff/WeaveStateManager
+}
+
+function d1-pull()
+{
+    if [ "$GIT_BRANCH" == "" ];
+	then
+		echo "d1-pull: no GIT_BRANCH defined"
+		return -1
+	fi
+
+    echo "git pull origin $GIT_BRANCH"
+    git pull origin $GIT_BRANCH
+}
+
+function d1-push()
+{
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "d1-push: no BuildRoot defined"
+	    return -1
+    fi
+
+    if [ "$GIT_BRANCH" == "" ];
+    then
+	    echo "d1-push: no GIT_BRANCH defined"
+	    return -1
+    fi
+
+    echo "git push origin $GIT_BRANCH"
+    git push origin $GIT_BRANCH
+}
+
+function d1-weave-setup()
+{
+    sudo chmod a+r /dev/bpf*
+    sudo ifconfig lo0 inet6 fd00:0:1:1::1/64
+    sudo ifconfig lo0 inet6 fd00:0:1:1::2/64
+}
+
+function d1-build()
+{
+    d1-goto; xcodebuild -arch x86_64 -scheme topazmac -configuration Debug -project /Volumes/NestDev/dolomite/production/build/xcode/dolomite.xcodeproj $@ | grep -v setenv
+    #    d1-goto; make simulator-development ForceOptimizeNone=Y
+}
+
+function d1-build-clean()
+{
+    #   d1-goto; xcodebuild -arch x86_64 -scheme topazmac -configuration Debug -project /Volumes/NestDev/dolomite/production/build/xcode/dolomite.xcodeproj $@ | grep -v setenv
+    d1-goto; make clean-simulator-development ForceOptimizeNone=Y
+}
+
+function d1-update-audio()
+{
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "d1-update-audio: no BuildRoot defined"
+	    return -1
+    fi
+
+    cd $BuildRoot/sw/nestlabs/apps/topaz/app/resources/audio
+    make BuildProduct=simulator BuildConfig=development install
+    cd $BuildRoot
+}
+
+function d1-etag()
+{
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "d1-etag: no BuildRoot defined"
+	    return -1
+    fi
+
+    echo "*** cd to BuildRoot $BuildRoot"
+
+    cd $BuildRoot
+
+    TAGS_FILE=TAGS
+
+    rm -f $TAGS_FILE
+    touch $TAGS_FILE
+
+    TAG_DIRS="\
+      sw/nestlabs \
+      sw/tps/lwip \
+      /Users/rtinkoff/Desktop/notes \
+      "
+
+    for i in $TAG_DIRS;
+    do
+	    echo "*** Tagging directory $i"
+	    find $i -name "*.c" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.cpp" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.h" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.hpp" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.xml" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.mm" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.m" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.mak" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.bld" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.el" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.xsd" | xargs etags --output=$TAGS_FILE --append
+	    find $i -name "*.strings" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "*.config" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "*.py" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "messages*" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "nlclient*" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "nlevent*" | xargs etags --output=$TAGS_FILE --append
+        find $i -name "*.txt" | xargs etags --output=$TAGS_FILE --append
+    done
+
+    TAG_FILES="\
+      /Users/rtinkoff/.emacs \
+      /Users/rtinkoff/.bashrc \
+      "
+
+    for i in $TAG_FILES;
+    do
+	    echo "*** Tagging file $i"
+	    etags --output=$TAGS_FILE --append $i
+    done
+
+    echo "*** Tagging complete - file is $BuildRoot/$TAGS_FILE"
+}
+
+function d1-picocom-first()
+{
+    picocom -b 115200 -r -l /dev/tty.usbserial-AH01K386
+}
+
+function d1-picocom-second()
+{
+    picocom -b 115200 -r -l /dev/tty.usbserial-AH01K386
+}
+
+function a1-picocom()
+{
+#    picocom -b 115200 -r -l /dev/tty.usbserial-AH01K2TT
+    picocom -b 115200 -r -l /dev/tty.usbserial-A702JX95
+}
+
+function b-build()
+{
+    s1-goto; xcodebuild -arch x86_64 -scheme nlclient_bundle -configuration Debug -project /Volumes/NestDev/sapphire/production/build/xcode/sapphire.xcodeproj $@ | grep -v setenv
+}
+
+function s1-goto()
+{
+    #export GIT_EXTERNAL_DIFF="~/root/bin/b-gitdiff"
+    unset GIT_EXTERNAL_DIFF
+    export GIT_EDITOR="/Applications/Emacs.app/Contents/MacOS/Emacs"
+
+    cd /Volumes/CookieBotOS/sapphire/production
+    . build/scripts/environment/setup.sh
+    cd $BuildRoot
+}
+
+function b-makesim()
+{
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "b-makesim: No valid BuildRoot"
+	    return -1
+    fi
+
+    $BuildRoot/build/scripts/automation/makesim $@
+}
+
+function b-makesim-setup()
+{
+    if [ "$BuildRoot" == "" ];
+    then
+	    echo "b-makesim-setup: No valid BuildRoot"
+	    return -1
+    fi
+
+    b-makesim -su -e -d
+    b-makesim --setup
+}
+
+function b-gdbsim()
+{
+	if [ "$BuildRoot" == "" ];
+    then
+	    echo "b-makesim-setup: No valid BuildRoot"
+	    return -1
+    fi
+
+	PROJECT_DIR="$BuildRoot/build/xcode/" DYLD_LIBRARY_PATH="$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/nestlabs/lib/CFUtilities/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/lpsolve/lib/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/nestlabs/lib/nlsystem/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/curl/usr/lib/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/freetype/usr/lib/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/libxml2/usr/lib/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/libmicrohttpd/usr/lib/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/nspr/usr/lib:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/mjson/usr/lib/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/dbus/usr/lib/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/boost/lib:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/nestlabs/lib/LogUtilities/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/nestlabs/lib/PathObserver/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/nestlabs/osm/lib/Version/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/nestlabs/lib/nlcore/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/cppunit/usr/lib/:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/tps/openssl/usr/lib:$PROJECT_DIR/../../results/simulator/apple/xcode/3.2/development/sw/nestlabs/lib/NuovationsUtilities/:" gdb results/simulator/apple/xcode/3.2/development/sw/nestlabs/app/client/nlclient
+}
+
+##
+# Your previous /Users/rtinkoff/.bash_profile file was backed up as /Users/rtinkoff/.bash_profile.macports-saved_2012-10-04_at_09:26:29
+##
+
+# MacPorts Installer addition on 2012-10-04_at_09:26:29: adding an appropriate PATH variable for use with MacPorts.
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+# Finished adapting your PATH environment variable for use with MacPorts.
+
+function b-testdr()
+{
+    $BuildRoot/sw/nestlabs/test/tests/demand_response.py
+}
+
+function k1()
+{
+    kermit --initfile:~/.kermrc
+}
+
+function k2()
+{
+    kermit --initfile:~/.kermrc-alt
+}
+
+function s1-grab-logs()
+{
+    if [ "$1" == "" ];
+    then
+	    echo "usage: s1-grab-logs [diamond HU address]"
+	    return -1
+    fi
+
+    scp root@$1:/nestlabs/var/log/nlclient ~/Desktop/logs
+    scp root@$1:/nestlabs/var/log/messages ~/Desktop/logs
+}
+
+function s1-grab-configs()
+{
+    if [ "$1" == "" ];
+    then
+	    echo "usage: s1-grab-configs [diamond HU address]"
+	    return -1
+    fi
+
+    scp root@$1:/nestlabs/etc/client.config ~/Desktop/configs
+    scp root@$1:/nestlabs/etc/user/settings.config ~/Desktop/configs
+}
+
+function hu-kermit()
+{
+    kermit -l /dev/tty.usbmodem*
+}
+
+function hl-kermit()
+{
+    kermit -l /dev/tty.usbserial-*
+}
+
+function hl-picocom()
+{
+    a1-picocom
+}
+

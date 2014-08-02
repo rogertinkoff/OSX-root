@@ -1,0 +1,14 @@
+source ~/.bashrc
+
+##
+# Your previous /Users/rtinkoff/.bash_profile file was backed up as /Users/rtinkoff/.bash_profile.macports-saved_2013-10-03_at_12:34:24
+##
+
+# MacPorts Installer addition on 2013-10-03_at_12:34:24: adding an appropriate PATH variable for use with MacPorts.
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+# Finished adapting your PATH environment variable for use with MacPorts.
+
+
+# Added by Canopy installer on 2013-11-06
+# VIRTUAL_ENV_DISABLE_PROMPT can be set to '' to make bashprompt show that Canopy is active, otherwise 1
+VIRTUAL_ENV_DISABLE_PROMPT=1 source /Users/rtinkoff/Library/Enthought/Canopy_64bit/User/bin/activate

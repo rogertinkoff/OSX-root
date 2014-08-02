@@ -1,0 +1,411 @@
+;; Set load-path
+
+(setq load-path (cons "~/root/src/elisp" load-path))
+(setq load-path (cons "~/root/src/elisp/auto-complete-1.3.1" load-path))
+(setq load-path (cons "~/root/src/elisp/cc-mode-5.32.1" load-path))
+(setq load-path (cons "~/root/src/elisp/color-theme-6.6.0" load-path))
+(setq load-path (cons "~/root/src/elisp/color-theme-6.6.0/themes" load-path))
+(setq load-path (cons "~/root/src/elisp/amdelisp-2007-01-20/elisp" load-path))
+(setq load-path (cons "~/root/src/elisp/nxml-mode-20041004" load-path))
+(setq load-path (cons "~/root/src/elisp/highlight-parentheses" load-path))
+(setq load-path (cons "~/root/src/global-5.9.4" load-path))
+(setq load-path (cons "~/root/src/elisp/git-emacs-master" load-path))
+
+(modify-frame-parameters (selected-frame) '((alpha . 100)))
+
+(setq ediff-split-window-function 'split-window-horizontally)
+
+;; Git
+
+;(require 'git)
+(require 'git-emacs)
+
+;; save our place when closing a file
+(require 'saveplace)
+(setq-default save-place t)
+
+;; always revert buffers if their files change on disk to reflect new changes
+(global-auto-revert-mode 1)
+
+;; Bash filename completion for the shell
+
+(require 'bash-completion)
+
+;; Better tags
+
+(defun rog-visit-tags-table ()
+"call visit-tags-table on TAGS if TAGS exists"
+(setq tags-table-list (list (getenv "BuildRoot")))
+(cond
+ (
+  (file-exists-p "TAGS")
+  (visit-tags-table "TAGS"))
+ )
+)
+(load "abtags")
+(load "etags-select")
+;;(rog-visit-tags-table)
+;;(setq tags-table-list (list (getenv "BuildRoot")))
+;;(visit-tags-table "TAGS")
+
+(setq ring-bell-function nil)
+(setq visible-bell t)
+
+(setq x-select-enable-clipboard t)
+
+;; global tags
+
+;;(load "gtags")
+;;(setq gtags-mode 1)
+
+;; Auto-complete
+
+(require 'auto-complete)
+(global-auto-complete-mode t)
+(setq completion-ignore-case t)
+
+;(require 'php-mode)
+
+;; start completion when entered 2 characters
+
+;(setq ac-auto-start 2)
+
+;; Use C-n/C-p to select candidates
+
+;;(define-key ac-complete-mode-map "\C-n" 'ac-next)
+;;(define-key ac-complete-mode-map "\C-p" 'ac-previous)
+
+;; Completion by TAB
+
+;(define-key ac-complete-mode-map "\t" 'ac-complete)
+;(define-key ac-complete-mode-map "\r" nil)
+
+;; Some additional goodies
+
+;(load "added")
+
+;; No startup screen
+
+(setq startup-screen-inhibit-startup-screen t)
+
+;; nXML
+
+(load "rng-auto")
+(setq auto-mode-alist
+(cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\|config\\)\\'" . nxml-mode) auto-mode-alist))
+
+;; Semantic
+
+;(add-to-list 'load-path "/root/src/elisp/semantic-1.4.4")
+;(setq semantic-load-turn-everything-on t)
+;(require 'semantic-load)
+
+;; Use "pending delete" mode
+
+(delete-selection-mode 1)
+
+;; Use apple key as meta key
+
+;(setq mac-command-modifier 'meta)
+(setq mac-option-modifier 'meta)
+
+;; Merge emacs kill-ring with the clipboard
+
+(setq x-select-enable-clipboard t)
+
+;; Disable toolbar
+
+(tool-bar-mode 0)
+
+;; grep-command
+
+(setq grep-command "grep -niIR \"\" $BuildRoot/sw/nestlabs")
+;(setq compile-command "source ~/.bash_profile; b-makesim -d")
+(setq compile-command "source ~/.bash_profile; b-build")
+
+;; Make color-theme selections stick.
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(aquamacs-styles-mode t)
+ '(blink-cursor-mode nil)
+ '(fringe-mode 0 nil (fringe))
+ '(grep-command "grep -niIR \"\" $BuildRoot/sw/nestlabs")
+ '(inhibit-startup-screen t)
+ '(initial-frame-alist (quote ((fullscreen . maximized))))
+ '(savehist-mode t nil (savehist))
+ '(show-paren-mode t)
+ '(split-height-threshold 0)
+ '(tool-bar-mode nil))
+
+;; Maps function key to control
+
+;(setq mac-function-modifier 'control)
+(setq mac-command-modifier 'meta)
+
+;; Key bindings
+
+(global-set-key (kbd "\C-x s") 'save-buffer)
+(global-set-key (kbd "\C-z") 'undo)
+(global-set-key (kbd "\C-x g") 'grep)
+(global-set-key (kbd "\C-x c") 'compile)
+(global-set-key (kbd "\C-x C-b") 'electric-buffer-list)
+(global-set-key (kbd "\C-c C-k") 'kill-compilation)
+(global-set-key (kbd "\C-x C-n") 'list-bookmarks)
+(global-set-key (kbd "\C-x a") 'abtags-find-file)
+;(global-set-key (kbd "\C-x a") 'gtags-find-file)
+(global-set-key (kbd "\C-x RET") 'tags-return)
+;(global-set-key (kbd "\C-x RET") 'gtags-pop-stack)
+
+(global-set-key "\M-z\M-o" 'abtags-find-next-file)
+
+(global-set-key (kbd "\C-x C-o") 'abtags-find-next-file)
+(global-set-key (kbd "\C-x e") 'eval-current-buffer )
+(global-set-key (kbd "\C-x f") 'grep-find )
+(global-set-key (kbd "\C-x g") 'git-grep )
+;;(global-set-key (kbd "\C-x r") 'revert-buffer)
+(global-set-key (kbd "\C-x l") 'goto-line)
+(global-set-key (kbd "\C-x i") 'indent-region)
+(global-set-key (kbd "\C-x .") 'find-tag)
+;;(global-set-key (kbd "\C-x .") 'etags-select-find-tag-at-point)
+;;(global-set-key (kbd "\C-x .") 'tags-search)
+;;(global-set-key (kbd "\C-x .") 'gtags-find-rtag)
+(global-set-key (kbd "\C-x [") 'beginning-of-buffer)
+(global-set-key (kbd "\C-x ]") 'end-of-buffer)
+
+(global-set-key (kbd "RET") 'newline-and-indent)
+(global-set-key (kbd "M-RET") 'gdb)
+
+(global-set-key (kbd "<C-up>") 'shell-backward-command)
+(global-set-key (kbd "<C-down>") 'shell-forward-command)
+(global-set-key (kbd "M-RET") 'gdb)
+
+(global-set-key "\C-c\C-c" 'comment-region)
+(global-set-key "\C-c\C-u" 'uncomment-region)
+
+(global-set-key [(shift up)] 'backward-paragraph)
+(global-set-key [(shift down)] 'forward-paragraph)
+(global-set-key [(meta up)] 'backward-paragraph)
+(global-set-key [(meta down)] 'forward-paragraph)
+
+(global-set-key [(control right)] 'forward-word)
+(global-set-key [(control left)] 'backward-word)
+(global-set-key [(C-home)] 'backward-word)
+(global-set-key [(C-end)] 'forward-word)
+
+;(global-set-key [delete] 'delete-other-windows)
+(global-set-key [f12] 'delete-other-windows)
+
+;(define-key osx-key-mode-map '[(control z)] 'undo)
+;(define-key osx-key-mode-map (kbd "DEL") 'delete-other-windows)
+
+;(define-key osx-key-mode-map '[F-right] 'forward-word)
+;(define-key osx-key-mode-map '[F-left] 'backward-word)
+
+
+;; Replace "yes or no" with y or n
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Changing files to use automatic C++ formatting (instead of standard C)
+
+(setq auto-mode-alist
+    (append '(("\\.h$" . c++-mode) ; Changed to C++
+		) auto-mode-alist)
+    )
+(setq auto-mode-alist
+    (append '(("\\.c$" . c++-mode) ; Changed to C++
+		) auto-mode-alist)
+    )
+(setq auto-mode-alist
+    (append '(("\\.cpp$" . c++-mode) ; Changed to C++
+		) auto-mode-alist)
+    )
+(setq auto-mode-alist
+    (append '(("\\.mm$" . c++-mode) ; Changed to C++
+		) auto-mode-alist)
+    )
+
+;; Fix c-indenting
+
+(set-default 'tab-width '4)
+(set-default 'indent-tabs-mode 'nil)
+(setq c-default-style "bsd" c-basic-offset 4)
+(c-set-offset 'case-label '+)
+
+;;(setq c-default-style "bsd" c-basic-offset 4)
+
+;;(c-set-offset 'case-label '+)
+
+;; filladapt mode
+
+;(require 'filladapt)
+;(setq filladapt-mode-line-string nil)
+;(setq-default filladapt-mode t)
+
+;; Confirm before killing emacs
+
+(defvar confirm-before-kill-emacs 1)
+
+;; Enable auto-fill
+
+(turn-on-auto-fill)
+
+;; Backups
+
+(defun make-backup-file-name (file-name)
+"Create the non-numeric backup file name for `file-name'."
+(require 'dired)
+(if (file-exists-p "/Users/rtinkoff/backups")
+    (concat (expand-file-name "/Users/rtinkoff/backups/")
+	      (replace-regexp-in-string "/" "!" file-name))
+  (concat file-name "~")))
+
+(setq make-backup-file-name-function 'make-backup-file-name)
+
+(setq backup-directory-alist '(("" . "/Users/rtinkoff/backups")))
+
+(defun force-backup-of-buffer ()
+(let ((buffer-backed-up nil))
+  (backup-buffer)))
+
+(add-hook 'before-save-hook 'force-backup-of-buffer)
+
+(setq make-backup-files t)
+(setq backup-by-copying t)
+(setq delete-old-versions t)
+(setq kept-new-versions 6)
+(setq kept-old-versions 2)
+(setq version-control t)
+
+;(require 'highlight-parentheses)
+;(highlight-parentheses-mode)
+;(require 'autopair)
+;(autopair-global-mode)
+
+(show-paren-mode t)
+
+;(defun make-backup-file-name (file)
+; (concat "~/backup/" (file-name-nondirectory file)))
+
+;; Disables Emacs' auto-backups altogether
+
+;;(setq make-backup-files nil)
+
+;; Deletes a tab composed of spaces all at once
+
+(setq backward-delete-char-untabify-method 'hungry)
+
+;; Line/Column mode
+
+(setq column-number-mode nil)
+(setq line-number-mode t)
+
+;; Turn off p4-check-mode unless absolutely necessary. It really
+;; hammers the server.
+
+(setq p4-do-find-file nil)
+(setq p4-file-refresh-timer-time 0)
+
+;; Display current function name in modeline
+
+(which-function-mode t)
+
+;(eval-after-load "which-func" '(add-to-list 'which-func-modes 'objc-mode))
+
+;; Colors
+
+(load "color-theme")
+(color-theme-initialize)
+;(color-theme-renegade)
+;(color-theme-aalto-light)
+;(color-theme-goldenrod)
+;(color-theme-jb-simple)
+;(color-theme-arjen)
+;(color-theme-charcoal-black)
+;(color-theme-bharadwaj-slate)
+;(color-theme-aliceblue)
+;(color-theme-classic)
+;(color-theme-clarity)
+;(color-theme-jedit-grey)
+;(color-theme-deep-blue)
+(color-theme-gray30)
+;(color-theme-hober)
+;(color-theme-midnight)
+;(color-theme-jsc-light2)
+
+;(load "color-theme-subdued")
+;(load "color-theme-gruber-dark")
+;(color-theme-subdued)
+
+;(setq gdb-many-windows nil)
+
+(setq grep-scroll-output t)
+(setq compilation-scroll-output t)
+
+(setq mac-allow-anti-aliasing 1)
+
+(setq blink-cursor-mode nil)
+(setq column-number-mode nil)
+(setq compilation-window-height 25)
+;(setq cursor-type (quote bar))
+(set-default 'cursor-type 'bar)
+(setq grep-window-height 25)
+;(setq one-buffer-one-frame-mode nil nil (aquamacs-frame-setup))
+(setq one-buffer-one-frame-mode nil)
+(setq transient-mark-mode t)
+(setq savehist-mode t)
+
+;(set-face-attribute 'default nil :height 120)
+
+(defun set-frame-size-according-to-resolution ()
+ (interactive)
+ (if window-system
+ (progn
+   ;; use 120 char wide window for largeish displays
+   ;; and smaller 80 column windows for smaller displays
+   ;; pick whatever numbers make sense for you
+   (if (> (x-display-pixel-width) 1280)
+          (add-to-list 'default-frame-alist (cons 'width 236))
+          (add-to-list 'default-frame-alist (cons 'width 80)))
+   ;; for the height, subtract a couple hundred pixels
+   ;; from the screen height (for panels, menubars and
+   ;; whatnot), then divide by the height of a char to
+   ;; get the height we want
+   (add-to-list 'default-frame-alist 
+        (cons 'height (/ (- (x-display-pixel-height) 65)
+                            (frame-char-height)))))))
+
+;;(set-frame-size-according-to-resolution)
+
+;(defun rog-set-frame-size()
+; (interactive)
+; (add-to-list 'default-frame-alist (cons 'width 236))
+; (add-to-list 'default-frame-alist (cons 'height 65)))
+
+(defun rog-set-frame-size()
+ (interactive)
+ (add-to-list 'default-frame-alist (cons 'width 100))
+ (add-to-list 'default-frame-alist (cons 'height 56)))
+
+(defun rog-set-frame-size-large()
+ (interactive)
+ (add-to-list 'default-frame-alist (cons 'width 134))
+ (add-to-list 'default-frame-alist (cons 'height 76)))
+
+;(rog-set-frame-size)
+;(rog-set-frame-size-large)
+
+(set-frame-position (selected-frame) 0 0)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "black" :foreground "gainsboro" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 150 :width normal :foundry "apple" :family "Monaco"))))
+ '(which-func ((t (:foreground "darkblue")))))
+(put 'upcase-region 'disabled nil)

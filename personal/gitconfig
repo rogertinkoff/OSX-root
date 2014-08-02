@@ -1,0 +1,40 @@
+[user]
+	name = Roger Tinkoff
+	email = rtinkoff@nestlabs.com
+
+[alias]
+    qlog = log --graph --color --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative
+    s = status
+    d = diff --color
+    dw = diff --color-words='\\w+|[0-9][0-9\\.]*|.'
+    omd = diff --color origin/master..
+    omds = diff --color --stat=140,120 origin/master..
+    m = checkout master
+    pr = pull --rebase
+    rom = rebase origin/master
+    romi = rebase -i origin/master
+    ds = diff --color --stat=140,120
+    co = checkout
+    br = branch
+	show-compact = log --graph --full-history --branches --all --pretty=format:%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s
+
+[mergetool.ediff]
+    cmd = emacs --eval \"(progn  (defun ediff-write-merge-buffer ()    (let ((file ediff-merge-store-file))      (set-buffer ediff-buffer-C)      (write-region (point-min) (point-max) file)      (message \\\"Merge buffer saved in: %s\\\" file)      (set-buffer-modified-p nil)      (sit-for 1)))  (setq ediff-quit-hook 'kill-emacs        ediff-quit-merge-hook 'ediff-write-merge-buffer)   (ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\"                                   \\\"$BASE\\\" nil \\\"$MERGED\\\"))\"
+
+[mergetool.e]
+    cmd = emacs $MERGED
+
+[merge]
+   tool = e
+
+[difftool.ediff]
+    cmd = emacs --eval \"(ediff-files \\\"$LOCAL\\\" \\\"$REMOTE\\\")\"
+
+[diff]
+   tool = ediff
+   guitool = ediff
+
+[commit]
+	template = /home/rtinkoff/.git-checkin-template
+[core]
+	editor = emacs -w
