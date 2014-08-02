@@ -93,13 +93,15 @@ find_git_dirty() {
     fi
 }
 
-PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
+#PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
+PROMPT_COMMAND="find_git_branch; $PROMPT_COMMAND"
 
 # Default Git enabled prompt with dirty state
 #export PS1="$txtwht\u@\h:\w\[$txtcyn\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
 
 # Another variant:
-export PS1="\[$bldgrn\]\u@\h\[$bldwht\] \w\[$bldcyn\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
+#export PS1="\[$bldgrn\]\u@\h\[$bldwht\] \w\[$bldcyn\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
+export PS1="\[$bldpur\]\u@\h\[$bldblu\] \w\[$txtrst\]$bldpur ($GIT_BRANCH)\n$txtrst> "
 
 # Default Git enabled root prompt (for use with "sudo -s")
 export SUDO_PS1="$txtwht\[$bakred\]\u@\h\[$txtrst\] \w\$ "
@@ -111,7 +113,7 @@ export PATH=$MY_PATH
 export XXDIFF=/Applications/xxdiff.app/Contents/MacOS/xxdiff
 
 alias ll='ls -l'
-alias rebash='source ~/.bash_profile'
+alias rebash='source ~/.bashrc'
 #alias e='/Applications/Aquamacs\ Emacs.app/Contents/MacOS/Aquamacs\ Emacs'
 #alias e='/Applications/Emacs.app/Contents/MacOS/Emacs --debug-init'
 #alias e='/Applications/Emacs.app/Contents/MacOS/Emacs'
@@ -338,7 +340,7 @@ function w1-goto()
     #export GIT_EXTERNAL_DIFF="~/root/bin/b-gitdiff"
     unset GIT_EXTERNAL_DIFF
 	export GIT_EDITOR="/Applications/Emacs.app/Contents/MacOS/Emacs"
-    export BuildRoot="/Users/rtinkoff/dev/weave/"
+    export BuildRoot="/Volumes/Invincible/weave/device-manager"
     cd $BuildRoot
 
     echo "BuildRoot=$BuildRoot"
@@ -565,7 +567,7 @@ function d1-etag()
 
 function d1-picocom-first()
 {
-    picocom -b 115200 -r -l /dev/tty.usbserial-AH01K386
+    picocom -b 115200 -r -l /dev/tty.usbmodem14531
 }
 
 function d1-picocom-second()
@@ -575,8 +577,8 @@ function d1-picocom-second()
 
 function a1-picocom()
 {
-#    picocom -b 115200 -r -l /dev/tty.usbserial-AH01K2TT
-    picocom -b 115200 -r -l /dev/tty.usbserial-A702JX95
+    picocom -b 115200 -r -l /dev/tty.usbserial-AH01K2TT
+#    picocom -b 115200 -r -l /dev/tty.usbserial-A702JX95
 }
 
 function b-build()
@@ -590,9 +592,56 @@ function s1-goto()
     unset GIT_EXTERNAL_DIFF
     export GIT_EDITOR="/Applications/Emacs.app/Contents/MacOS/Emacs"
 
-    cd /Volumes/CookieBotOS/sapphire/production
+    cd /Volumes/Invincible/sapphire/production
     . build/scripts/environment/setup.sh
     cd $BuildRoot
+}
+
+function s1-etag()
+{
+   if [ "$BuildRoot" == "" ];
+   then
+	echo "s1-etag: no BuildRoot defined"
+	return -1
+   fi
+
+   echo "*** cd to BuildRoot $BuildRoot"
+
+   cd $BuildRoot
+
+   TAGS_FILE=TAGS
+
+   rm -f $TAGS_FILE
+   touch $TAGS_FILE
+
+   TAG_DIRS="\
+   sw/nestlabs/app \
+   sw/nestlabs/include \
+   sw/nestlabs/lib \
+   sw/nestlabs/osm \
+   sw/nestlabs/scpm \
+   sw/nestlabs/zigbee \
+   sw/nestlabs/weave \
+   "
+
+   for i in $TAG_DIRS;
+   do
+	echo "*** Tagging directory $i"
+	find $i -name "*.c" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.cpp" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.h" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.hpp" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.xml" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.mm" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.m" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.mak" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.bld" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.el" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.xsd" | xargs etags --output=$TAGS_FILE --append
+	find $i -name "*.strings" | xargs etags --output=$TAGS_FILE --append
+   done
+
+   echo "*** Tagging complete - file is $BuildRoot/$TAGS_FILE"
 }
 
 function b-makesim()
@@ -660,6 +709,7 @@ function s1-grab-logs()
 	    return -1
     fi
 
+    mkdir -p ~/Desktop/logs
     scp root@$1:/nestlabs/var/log/nlclient ~/Desktop/logs
     scp root@$1:/nestlabs/var/log/messages ~/Desktop/logs
 }
@@ -691,3 +741,12 @@ function hl-picocom()
     a1-picocom
 }
 
+function krm()
+{
+    kermit -b 115200 -l $1
+}
+
+function pcm()
+{
+    picocom -b 115200 -r -l $1
+}

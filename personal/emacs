@@ -143,7 +143,7 @@
 
 ;; Maps function key to control
 
-;(setq mac-function-modifier 'control)
+(setq mac-function-modifier 'control)
 (setq mac-command-modifier 'meta)
 
 ;; Key bindings
@@ -336,7 +336,6 @@
 ;(color-theme-hober)
 ;(color-theme-midnight)
 ;(color-theme-jsc-light2)
-
 ;(load "color-theme-subdued")
 ;(load "color-theme-gruber-dark")
 ;(color-theme-subdued)
