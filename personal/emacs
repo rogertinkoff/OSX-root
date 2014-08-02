@@ -1,15 +1,15 @@
 ;; Set load-path
 
-(setq load-path (cons "~/root/src/elisp" load-path))
-(setq load-path (cons "~/root/src/elisp/auto-complete-1.3.1" load-path))
-(setq load-path (cons "~/root/src/elisp/cc-mode-5.32.1" load-path))
-(setq load-path (cons "~/root/src/elisp/color-theme-6.6.0" load-path))
-(setq load-path (cons "~/root/src/elisp/color-theme-6.6.0/themes" load-path))
-(setq load-path (cons "~/root/src/elisp/amdelisp-2007-01-20/elisp" load-path))
-(setq load-path (cons "~/root/src/elisp/nxml-mode-20041004" load-path))
-(setq load-path (cons "~/root/src/elisp/highlight-parentheses" load-path))
-(setq load-path (cons "~/root/src/global-5.9.4" load-path))
-(setq load-path (cons "~/root/src/elisp/git-emacs-master" load-path))
+(setq load-path (cons "~/OSX-root/src/elisp" load-path))
+(setq load-path (cons "~/OSX-root/src/elisp/auto-complete-1.3.1" load-path))
+(setq load-path (cons "~/OSX-root/src/elisp/cc-mode-5.32.1" load-path))
+(setq load-path (cons "~/OSX-root/src/elisp/color-theme-6.6.0" load-path))
+(setq load-path (cons "~/OSX-root/src/elisp/color-theme-6.6.0/themes" load-path))
+(setq load-path (cons "~/OSX-root/src/elisp/amdelisp-2007-01-20/elisp" load-path))
+(setq load-path (cons "~/OSX-root/src/elisp/nxml-mode-20041004" load-path))
+(setq load-path (cons "~/OSX-root/src/elisp/highlight-parentheses" load-path))
+(setq load-path (cons "~/OSX-root/src/global-5.9.4" load-path))
+(setq load-path (cons "~/OSX-root/src/elisp/git-emacs-master" load-path))
 
 (modify-frame-parameters (selected-frame) '((alpha . 100)))
 
@@ -96,7 +96,7 @@
 
 ;; Semantic
 
-;(add-to-list 'load-path "/root/src/elisp/semantic-1.4.4")
+;(add-to-list 'load-path "/OSX-root/src/elisp/semantic-1.4.4")
 ;(setq semantic-load-turn-everything-on t)
 ;(require 'semantic-load)
 
@@ -332,10 +332,10 @@
 ;(color-theme-clarity)
 ;(color-theme-jedit-grey)
 ;(color-theme-deep-blue)
-(color-theme-gray30)
+;(color-theme-gray30)
 ;(color-theme-hober)
 ;(color-theme-midnight)
-;(color-theme-jsc-light2)
+(color-theme-jsc-light2)
 ;(load "color-theme-subdued")
 ;(load "color-theme-gruber-dark")
 ;(color-theme-subdued)
@@ -405,6 +405,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "black" :foreground "gainsboro" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 150 :width normal :foundry "apple" :family "Monaco"))))
+; '(default ((t (:inherit nil :stipple nil :background "black" :foreground "gainsboro" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 150 :width normal :foundry "apple" :family "Monaco"))))
  '(which-func ((t (:foreground "darkblue")))))
 (put 'upcase-region 'disabled nil)
