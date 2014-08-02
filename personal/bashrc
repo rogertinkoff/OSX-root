@@ -100,8 +100,8 @@ PROMPT_COMMAND="find_git_branch; $PROMPT_COMMAND"
 #export PS1="$txtwht\u@\h:\w\[$txtcyn\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
 
 # Another variant:
-#export PS1="\[$bldgrn\]\u@\h\[$bldwht\] \w\[$bldcyn\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
-export PS1="\[$bldpur\]\u@\h\[$bldblu\] \w\[$txtrst\]$bldpur ($GIT_BRANCH)\n$txtrst> "
+export PS1="\[$bldpur\]\u@\h\[$bldblu\] \w\[$txtrst\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
+#export PS1="\[$bldpur\]\u@\h\[$bldblu\] \w\[$txtrst\]$bldpur ($GIT_BRANCH)\n$txtrst> "
 
 # Default Git enabled root prompt (for use with "sudo -s")
 export SUDO_PS1="$txtwht\[$bakred\]\u@\h\[$txtrst\] \w\$ "
