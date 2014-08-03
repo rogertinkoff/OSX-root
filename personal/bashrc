@@ -726,6 +726,28 @@ function s1-grab-configs()
     scp root@$1:/nestlabs/etc/user/settings.config ~/Desktop/configs
 }
 
+function s1-copy-image()
+{
+    if [ "$1" == "" ];
+    then
+	    echo "usage: s1-copy-image [diamond HU address]"
+	    return -1
+    fi
+
+    scp ~/Desktop/builds/install/*.tgz root@$1:/media/scratch
+}
+
+function s1-install-image()
+{
+    if [ "$1" == "" ];
+    then
+	    echo "usage: s1-install-image [diamond HU address]"
+	    return -1
+    fi
+
+    ssh root@$1 /nestlabs/sbin/nlswupdate /media/scratch/*.tgz
+}
+
 function hu-kermit()
 {
     kermit -l /dev/tty.usbmodem*

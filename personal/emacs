@@ -1,3 +1,4 @@
+
 ;; Set load-path
 
 (setq load-path (cons "~/OSX-root/src/elisp" load-path))
@@ -329,13 +330,13 @@
 ;(color-theme-bharadwaj-slate)
 ;(color-theme-aliceblue)
 ;(color-theme-classic)
-;(color-theme-clarity)
+(color-theme-clarity)
 ;(color-theme-jedit-grey)
 ;(color-theme-deep-blue)
 ;(color-theme-gray30)
 ;(color-theme-hober)
 ;(color-theme-midnight)
-(color-theme-jsc-light2)
+;(color-theme-jsc-light2)
 ;(load "color-theme-subdued")
 ;(load "color-theme-gruber-dark")
 ;(color-theme-subdued)
