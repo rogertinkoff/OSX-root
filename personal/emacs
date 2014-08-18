@@ -330,13 +330,13 @@
 ;(color-theme-bharadwaj-slate)
 ;(color-theme-aliceblue)
 ;(color-theme-classic)
-(color-theme-clarity)
+;(color-theme-clarity)
 ;(color-theme-jedit-grey)
 ;(color-theme-deep-blue)
 ;(color-theme-gray30)
 ;(color-theme-hober)
 ;(color-theme-midnight)
-;(color-theme-jsc-light2)
+(color-theme-jsc-light2)
 ;(load "color-theme-subdued")
 ;(load "color-theme-gruber-dark")
 ;(color-theme-subdued)
@@ -407,5 +407,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
 ; '(default ((t (:inherit nil :stipple nil :background "black" :foreground "gainsboro" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 150 :width normal :foundry "apple" :family "Monaco"))))
+ '(default ((t (:height 150))))
  '(which-func ((t (:foreground "darkblue")))))
 (put 'upcase-region 'disabled nil)

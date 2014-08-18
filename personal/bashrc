@@ -340,7 +340,7 @@ function w1-goto()
     #export GIT_EXTERNAL_DIFF="~/root/bin/b-gitdiff"
     unset GIT_EXTERNAL_DIFF
 	export GIT_EDITOR="/Applications/Emacs.app/Contents/MacOS/Emacs"
-    export BuildRoot="/Volumes/Invincible/weave/device-manager"
+    export BuildRoot="/Users/rtinkoff/dev/weave/device-manager"
     cd $BuildRoot
 
     echo "BuildRoot=$BuildRoot"
