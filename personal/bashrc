@@ -100,8 +100,9 @@ PROMPT_COMMAND="find_git_branch; $PROMPT_COMMAND"
 #export PS1="$txtwht\u@\h:\w\[$txtcyn\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
 
 # Another variant:
-export PS1="\[$bldpur\]\u@\h\[$bldblu\] \w\[$txtrst\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
+#export PS1="\[$bldpur\]\u@\h\[$bldblu\] \w\[$txtrst\] \$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\n> "
 #export PS1="\[$bldpur\]\u@\h\[$bldblu\] \w\[$txtrst\]$bldpur ($GIT_BRANCH)\n$txtrst> "
+export PS1="\[$bldgrn\]\u@\h\[$bldylw\] \w\[$txtrst\] \$git_branch\[$txtwht\]\$git_dirty\[$txtrst\]\n> "
 
 # Default Git enabled root prompt (for use with "sudo -s")
 export SUDO_PS1="$txtwht\[$bakred\]\u@\h\[$txtrst\] \w\$ "
@@ -592,7 +593,18 @@ function s1-goto()
     unset GIT_EXTERNAL_DIFF
     export GIT_EDITOR="/Applications/Emacs.app/Contents/MacOS/Emacs"
 
-    cd /Volumes/Invincible/sapphire/production
+    cd /Volumes/OverlookHotel/sapphire/production
+    . build/scripts/environment/setup.sh
+    cd $BuildRoot
+}
+
+function s2-goto()
+{
+    #export GIT_EXTERNAL_DIFF="~/root/bin/b-gitdiff"
+    unset GIT_EXTERNAL_DIFF
+    export GIT_EDITOR="/Applications/Emacs.app/Contents/MacOS/Emacs"
+
+    cd ~/dev/sapphire/production
     . build/scripts/environment/setup.sh
     cd $BuildRoot
 }
@@ -772,3 +784,8 @@ function pcm()
 {
     picocom -b 115200 -r -l $1
 }
+
+PERL_MB_OPT="--install_base \"/Users/rtinkoff/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/rtinkoff/perl5"; export PERL_MM_OPT;
+
+s1-goto

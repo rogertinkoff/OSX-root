@@ -34,7 +34,7 @@
    tool = ediff
    guitool = ediff
 
-[commit]
-	template = /home/rtinkoff/.git-checkin-template
+#[commit]
+#	template = /home/rtinkoff/.git-checkin-template
 [core]
-	editor = /Applications/Emacs.app/Contents/MacOS/Emacs -w
+	editor = /Applications/Emacs.app/Contents/MacOS/Emacs
