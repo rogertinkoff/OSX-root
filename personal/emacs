@@ -340,8 +340,10 @@
 ;(load "color-theme-subdued")
 ;(load "color-theme-gruber-dark")
 ;(color-theme-subdued)
+(load "color-theme-cobalt")
+(color-theme-cobalt)
 
-(load "monokai-theme")
+;(load "monokai-theme")
 
 ;(setq gdb-many-windows nil)
 
@@ -360,6 +362,7 @@
 (setq one-buffer-one-frame-mode nil)
 (setq transient-mark-mode t)
 (setq savehist-mode t)
+(electric-pair-mode 1)
 
 ;(set-face-attribute 'default nil :height 120)
 
