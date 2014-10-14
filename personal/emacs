@@ -340,8 +340,9 @@
 ;(load "color-theme-subdued")
 ;(load "color-theme-gruber-dark")
 ;(color-theme-subdued)
-(load "color-theme-cobalt")
-(color-theme-cobalt)
+;(load "color-theme-cobalt")
+;(color-theme-cobalt)
+(load "leuven-theme")
 
 ;(load "monokai-theme")
 
