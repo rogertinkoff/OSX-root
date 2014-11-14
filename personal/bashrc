@@ -593,7 +593,7 @@ function s1-goto()
     unset GIT_EXTERNAL_DIFF
     export GIT_EDITOR="/Applications/Emacs.app/Contents/MacOS/Emacs"
 
-    cd /Volumes/OverlookHotel/sapphire/production
+    cd /Volumes/CoolBeans/sapphire/production
     . build/scripts/environment/setup.sh
     cd $BuildRoot
 }
@@ -788,4 +788,7 @@ function pcm()
 PERL_MB_OPT="--install_base \"/Users/rtinkoff/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/Users/rtinkoff/perl5"; export PERL_MM_OPT;
 
-s1-goto
+#s1-goto
+
+PERL_MB_OPT="--install_base \"/Users/rtinkoff/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/rtinkoff/perl5"; export PERL_MM_OPT;
